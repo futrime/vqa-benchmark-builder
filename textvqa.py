@@ -8,7 +8,7 @@ def load(output_file: str) -> None:
 
     dataset = datasets.load_dataset(
         path="lmms-lab/textvqa",
-        split="val",
+        split="validation",
     )
 
     assert isinstance(dataset, datasets.Dataset)
