@@ -3,6 +3,7 @@ from typing import List
 
 import datasets
 import pandas as pd
+import tqdm
 
 from config import DATASET_LIST, PATTERN_LIST
 from dataset_metadata import DatasetMetadata
@@ -12,7 +13,7 @@ from pattern import Pattern
 def load_datasets(metadata_list: List[DatasetMetadata]) -> pd.DataFrame:
     dataset_list: List[datasets.Dataset] = []
 
-    for metadata in metadata_list:
+    for metadata in tqdm.tqdm(metadata_list, desc="Loading datasets"):
         dataset = datasets.load_dataset(
             path=metadata["path"],
             name=metadata["name"],
@@ -41,7 +42,9 @@ def load_datasets(metadata_list: List[DatasetMetadata]) -> pd.DataFrame:
 def analyze_tags(dataframe: pd.DataFrame, pattern_list: List[Pattern]) -> pd.DataFrame:
     dataframe["tags"] = [[] for _ in range(len(dataframe))]
 
-    for _, row in dataframe.iterrows():
+    for _, row in tqdm.tqdm(
+        dataframe.iterrows(), desc="Analyzing tags", total=len(dataframe)
+    ):
         question = row["question"]
         answer = row["answer"]
         assert isinstance(question, str)
