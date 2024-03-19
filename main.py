@@ -1,12 +1,9 @@
 import os
-import re
-from typing import Dict
 
 import datasets
 import pandas as pd
 
-from all_datasets import DATASET_LIST
-from all_patterns import PATTERN_LIST
+from config import DATASET_LIST, PATTERN_LIST
 from dataset_metadata import DatasetMetadata
 from pattern import Pattern
 
@@ -28,23 +25,13 @@ def load_dataset(metadata: DatasetMetadata) -> datasets.Dataset:
 
 
 def match_pattern(dataframe: pd.DataFrame, pattern: Pattern) -> pd.DataFrame:
-    regex_common = re.compile("|".join(pattern["common"]), re.IGNORECASE)
-    regex_question = re.compile("|".join(pattern["question"]), re.IGNORECASE)
-    regex_answer = re.compile("|".join(pattern["answer"]), re.IGNORECASE)
-
     for index, row in dataframe.iterrows():
         question = row["question"]
         answer = row["answer"]
         assert isinstance(question, str)
         assert isinstance(answer, str)
 
-        combined = f"{question} {answer}"
-
-        if (
-            regex_question.search(question)
-            or regex_answer.search(answer)
-            or regex_common.search(combined)
-        ):
+        if pattern["matcher"](question, answer):
             patterns = row["patterns"]
             assert isinstance(patterns, list)
             patterns.append(pattern["name"])

@@ -1,6 +1,8 @@
 from typing import List
 
 from dataset_metadata import DatasetMetadata
+from matchers import match_color, match_counting
+from pattern import Pattern
 
 DATASET_LIST: List[DatasetMetadata] = [
     {
@@ -129,4 +131,15 @@ DATASET_LIST: List[DatasetMetadata] = [
     #         "multiple_choice_answer": "answer",
     #     },
     # },
+]
+
+PATTERN_LIST: List[Pattern] = [
+    {
+        "name": "color",
+        "matcher": match_color,
+    },
+    {
+        "name": "count",
+        "matcher": match_counting,
+    },
 ]

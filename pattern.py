@@ -1,20 +1,15 @@
-from typing import List, TypedDict
+from typing import Callable, TypedDict
 
 
 class Pattern(TypedDict):
-    """A pattern is a list of regular expressions that match the same
-    concept. For example, the pattern "color" might include the regular
-    expressions "color" and "colour".
+    """A pattern for matching a pair of question and answer to a tag.
 
     Attributes:
         name: The name of the pattern.
-        question: A list of regular expressions that match the concept in
-            the question.
-        answer: A list of regular expressions that match the concept in
-            the answer.
+        matcher: A function that takes a question and an answer and returns
+            True if the question and answer match the pattern, and False
+            otherwise.
     """
 
     name: str
-    common: List[str]
-    question: List[str]
-    answer: List[str]
+    matcher: Callable[[str, str], bool]
