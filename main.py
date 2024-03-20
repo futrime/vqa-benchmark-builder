@@ -22,13 +22,16 @@ def load_datasets(metadata_list: List[DatasetMetadata]) -> pd.DataFrame:
 
         assert isinstance(dataset, datasets.Dataset)
 
-        dataset_list.append(
-            dataset.select_columns(
-                list(metadata["column_mapping"].keys()),
-            ).rename_columns(
-                metadata["column_mapping"],
-            )
+        for key, value in metadata["column_casting"].items():
+            dataset = dataset.cast_column(key, value)
+
+        dataset = dataset.select_columns(
+            list(metadata["column_renaming"].keys()),
+        ).rename_columns(
+            metadata["column_renaming"],
         )
+
+        dataset_list.append(dataset)
 
     dataset = datasets.concatenate_datasets(dataset_list)
     assert isinstance(dataset, datasets.Dataset)
