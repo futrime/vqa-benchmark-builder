@@ -13,144 +13,88 @@ DATASET_METADATA_LIST: List[DatasetMetadata] = [
         "path": "lmms-lab/ChartQA",
         "name": None,
         "split": "test",
-        "converter": convert_simple_dataset,
+        "converter": make_convert_simple_dataset(),
     },
     {
         "path": "lmms-lab/DocVQA",
         "name": "DocVQA",
         "split": "validation",
-        "converter": convert_multiple_answers_dataset,
+        "converter": make_convert_multiple_answers_dataset(),
     },
-    # {
-    #     "path": "lmms-lab/DocVQA",
-    #     "name": "InfographicVQA",
-    #     "split": "validation",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answers": "answer",
-    #     },
-    #     "column_casting": {
-    #         "answers": datasets.Value("string"),
-    #     },
-    # },
-    # {
-    #     "path": "lmms-lab/GQA",
-    #     "name": "train_all_instructions",
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "fullAnswer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/llava-bench-coco",
-    #     "name": None,
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/llava-bench-in-the-wild",
-    #     "name": None,
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "gpt_answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/MP-DocVQA",
-    #     "name": None,
-    #     "split": "val",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answers": "answer",
-    #     },
-    #     "column_casting": {
-    #         "answers": datasets.Value("string"),
-    #     },
-    # },
-    # {
-    #     "path": "lmms-lab/OK-VQA",
-    #     "name": None,
-    #     "split": "val2014",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answers": "answer",
-    #     },
-    #     "column_casting": {
-    #         "answers": datasets.Value("string"),
-    #     },
-    # },
-    # {
-    #     "path": "flaviagiammarino/path-vqa",
-    #     "name": None,
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/textvqa",
-    #     "name": None,
-    #     "split": "validation",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answers": "answer",
-    #     },
-    #     "column_casting": {
-    #         "answers": datasets.Value("string"),
-    #     },
-    # },
-    # {
-    #     "path": "ruanchaves/visual7w-gpt",
-    #     "name": None,
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/VizWiz-VQA",
-    #     "name": None,
-    #     "split": "val",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answers": "answer",
-    #     },
-    #     "column_casting": {
-    #         "answers": datasets.Value("string"),
-    #     },
-    # },
-    # {
-    #     "path": "flaviagiammarino/vqa-rad",
-    #     "name": None,
-    #     "split": "train",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
-    # {
-    #     "path": "lmms-lab/VQAv2",
-    #     "name": None,
-    #     "split": "validation",
-    #     "column_renaming": {
-    #         "question": "question",
-    #         "multiple_choice_answer": "answer",
-    #     },
-    #     "column_casting": {},
-    # },
+    {
+        "path": "lmms-lab/DocVQA",
+        "name": "InfographicVQA",
+        "split": "validation",
+        "converter": make_convert_multiple_answers_dataset(),
+    },
+    {
+        "path": "lmms-lab/GQA",
+        "name": "train_all_instructions",
+        "split": "train",
+        "converter": make_convert_simple_dataset(answer_column="fullAnswer"),
+    },
+    {
+        "path": "lmms-lab/llava-bench-coco",
+        "name": None,
+        "split": "train",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "lmms-lab/llava-bench-in-the-wild",
+        "name": None,
+        "split": "train",
+        "converter": make_convert_simple_dataset(answer_column="gpt_answer"),
+    },
+    {
+        "path": "lmms-lab/MP-DocVQA",
+        "name": None,
+        "split": "val",
+        "converter": make_convert_multiple_answers_dataset(),
+    },
+    {
+        "path": "lmms-lab/OK-VQA",
+        "name": None,
+        "split": "val2014",
+        "converter": make_convert_multiple_answers_dataset(),
+    },
+    {
+        "path": "flaviagiammarino/path-vqa",
+        "name": None,
+        "split": "train",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "lmms-lab/textvqa",
+        "name": None,
+        "split": "validation",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "ruanchaves/visual7w-gpt",
+        "name": None,
+        "split": "train",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "lmms-lab/VizWiz-VQA",
+        "name": None,
+        "split": "val",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "flaviagiammarino/vqa-rad",
+        "name": None,
+        "split": "train",
+        "converter": make_convert_simple_dataset(),
+    },
+    {
+        "path": "lmms-lab/VQAv2",
+        "name": None,
+        "split": "validation",
+        "converter": make_convert_simple_dataset(
+            answer_column="multiple_choice_answer"
+        ),
+    },
 ]
 
 
