@@ -67,7 +67,7 @@ DATASET_METADATA_LIST: List[DatasetMetadata] = [
         "path": "lmms-lab/textvqa",
         "name": None,
         "split": "validation",
-        "converter": make_convert_simple_dataset(),
+        "converter": make_convert_multiple_answers_dataset(),
     },
     {
         "path": "ruanchaves/visual7w-gpt",
@@ -79,7 +79,7 @@ DATASET_METADATA_LIST: List[DatasetMetadata] = [
         "path": "lmms-lab/VizWiz-VQA",
         "name": None,
         "split": "val",
-        "converter": make_convert_simple_dataset(),
+        "converter": make_convert_multiple_answers_dataset(),
     },
     {
         "path": "flaviagiammarino/vqa-rad",
@@ -101,7 +101,7 @@ DATASET_METADATA_LIST: List[DatasetMetadata] = [
 def main() -> None:
     os.makedirs("data/", exist_ok=True)
 
-    dataframe_list: List[pd.DataFrame] = []
+    full_dataframe = pd.DataFrame(columns=["question", "answer"])
 
     for metadata in tqdm.tqdm(DATASET_METADATA_LIST, desc="Loading datasets"):
         dataset = datasets.load_dataset(
@@ -113,11 +113,9 @@ def main() -> None:
 
         dataframe = metadata["converter"](dataset)
 
-        dataframe_list.append(dataframe)
+        pd.concat([full_dataframe, dataframe], ignore_index=True)
 
-    concatenated_dataframe = pd.concat(dataframe_list, ignore_index=True)
-
-    concatenated_dataframe.to_csv("data/qa.csv")
+    full_dataframe.to_csv("data/qa.csv", index=False)
 
 
 if __name__ == "__main__":
