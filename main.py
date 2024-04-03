@@ -25,11 +25,19 @@ def main() -> None:
     )
     assert isinstance(model, transformers.LlavaNextForConditionalGeneration)
 
+    model.to("cuda:0")  # type: ignore
+
     for i in range(0, 10):
         image, question = dataset[i]
-        inputs = processor(question["question"], image, return_tensors="pt")
-        outputs = model.generate(**inputs, max_new_tokens=50)
-        print("Question:", question["question"])
+        prompt = f"[INST] <image>\n{question['question']} Answer in short form. [/INST]"
+
+        inputs = processor(prompt, image, return_tensors="pt").to("cuda:0")
+        outputs = model.generate(**inputs, max_new_tokens=100)
+
+        answer = processor.decode(outputs[0], skip_special_tokens=True)
+
+        print(answer)
+        print()
 
 
 if __name__ == "__main__":
