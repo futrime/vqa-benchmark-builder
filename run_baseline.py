@@ -1,4 +1,8 @@
+import re
+
 import torch
+import torch.utils.data
+import tqdm
 import transformers
 
 from lora_dataset import LoRADataset
@@ -27,17 +31,29 @@ def main() -> None:
 
     model.to("cuda:0")  # type: ignore
 
-    for i in range(0, 10):
-        image, question = dataset[i]
-        prompt = f"[INST] <image>\n{question['question']} Answer in short form. [/INST]"
+    correct_count = 0
 
+    progress_bar = tqdm.tqdm(total=len(dataset))
+    for i in range(len(dataset)):
+        image, question, answer = dataset[i]
+
+        prompt = f"[INST] <image>\n{question} Answer in short form. [/INST]"
         inputs = processor(prompt, image, return_tensors="pt").to("cuda:0")
-        outputs = model.generate(**inputs, max_new_tokens=100)
 
-        answer = processor.decode(outputs[0], skip_special_tokens=True)
+        outputs = model.generate(
+            **inputs, max_new_tokens=100, pad_token_id=model.pad_token_id
+        )
+        predicted = processor.decode(outputs[0], skip_special_tokens=True)
 
-        print(answer)
-        print()
+        if check_answer(predicted, answer):
+            correct_count += 1
+
+        progress_bar.desc = f"Accuracy: {correct_count / (i+1):.2%}"
+        progress_bar.update()
+
+
+def check_answer(predicted: str, answer: str):
+    return re.search(answer, predicted, re.IGNORECASE) is not None
 
 
 if __name__ == "__main__":

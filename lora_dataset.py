@@ -11,22 +11,23 @@ class LoRADataset(torch.utils.data.Dataset):
         super().__init__()
 
         with open(question_file_path, "r") as f:
-            self._questions: List[Question] = json.load(f)
+            self._metadata_list: List[Metadata] = json.load(f)
 
         self._image_dir = image_dir
 
     def __len__(self):
-        return len(self._questions)
+        return len(self._metadata_list)
 
-    def __getitem__(self, index: int) -> Tuple[PIL.Image.Image, "Question"]:
-        question = self._questions[index]
-        image_path = os.path.join(self._image_dir, question["image_id"])
+    def __getitem__(self, index: int) -> Tuple[PIL.Image.Image, str, str]:
+        metadata = self._metadata_list[index]
+
+        image_path = os.path.join(self._image_dir, metadata["image_id"])
         image = PIL.Image.open(image_path)
 
-        return image, question
+        return image, metadata["question"], metadata["answer"]
 
 
-class Question(TypedDict):
+class Metadata(TypedDict):
     question_id: int
     question: str
     answer: str
