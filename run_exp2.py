@@ -38,32 +38,33 @@ def main() -> None:
     for i in range(len(dataset)):
         image, question, answer = dataset[i]
 
-        q_prompt = f"[INST] <image>\n{question} Think in steps and answer in short form. [/INST] Let's think step by step:\n<steps>\n1."
-        q_inputs = processor(q_prompt, image, return_tensors="pt").to(device)
+        prompt_q = f"[INST] <image> {question} Think step by step and answer in short form. [/INST] Let's think step by step: <steps> First,"
+        inputs_q = processor(prompt_q, image, return_tensors="pt").to(device)
 
-        qs_outputs = model.generate(
-            **q_inputs,
-            max_new_tokens=2000,
+        outputs_q = model.generate(
+            **inputs_q,
+            max_new_tokens=1024,
             pad_token_id=model.pad_token_id,
         )
-        qs_predicted = processor.decode(qs_outputs[0], skip_special_tokens=True)
-        assert isinstance(qs_predicted, str)
+        predicted_q = processor.decode(outputs_q[0], skip_special_tokens=True)
+        assert isinstance(predicted_q, str)
 
-        if qs_predicted.lower().find("</steps>") == -1:
-            qs_predicted += "</steps>\n"
+        predicted_steps = extract_steps(predicted_q)
 
-        qs_prompt = f"{qs_predicted}"
-        qs_inputs = processor(qs_prompt, image, return_tensors="pt").to(device)
+        prompt_qs = f"[INST] <image> {question} Think step by step and answer in short form. [/INST] Let's think step by step: <steps>{predicted_steps}</steps> The short answer is: <answer>"
+        inputs_qs = processor(prompt_qs, image, return_tensors="pt").to(device)
 
-        qsa_outputs = model.generate(
-            **qs_inputs,
-            max_new_tokens=20,
+        outputs_qs = model.generate(
+            **inputs_qs,
+            max_new_tokens=1024,
             pad_token_id=model.pad_token_id,
         )
-        qsa = processor.decode(qsa_outputs[0], skip_special_tokens=True)
-        assert isinstance(qsa, str)
+        predicted_qs = processor.decode(outputs_qs[0], skip_special_tokens=True)
+        assert isinstance(predicted_qs, str)
 
-        if check_answer(qsa, answer):
+        predicted_answer = extract_answer(predicted_qs)
+
+        if check_answer(predicted_answer, answer):
             correct_count += 1
 
         progress_bar.desc = f"Accuracy: {correct_count / (i+1):.2%}"
@@ -72,7 +73,14 @@ def main() -> None:
     print(f"Accuracy: {correct_count / len(dataset):.2%}")
 
 
-def check_answer(predicted: str, answer: str) -> bool:
+def check_answer(predicted_answer: str, answer: str) -> bool:
+    if predicted_answer.lower().find(answer.lower()) != -1:
+        return True
+
+    return False
+
+
+def extract_answer(predicted: str) -> str:
     if predicted.lower().find("</answer>") == -1:
         predicted += "</answer>"
 
@@ -82,14 +90,24 @@ def check_answer(predicted: str, answer: str) -> bool:
         flags=re.IGNORECASE | re.DOTALL,
     )
     if match is None:
-        return False
+        raise ValueError("answer not found in predicted text")
 
-    predicted_answer = match.group(1)
+    return match.group(1)
 
-    if predicted_answer.lower().find(answer.lower()) != -1:
-        return True
 
-    return False
+def extract_steps(predicted: str) -> str:
+    if predicted.lower().find("</steps>") == -1:
+        predicted += "</steps>"
+
+    match = re.search(
+        r"<steps>(.*)</steps>",
+        predicted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if match is None:
+        raise ValueError("steps not found in predicted text")
+
+    return match.group(1)
 
 
 if __name__ == "__main__":
