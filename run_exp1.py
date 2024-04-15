@@ -38,7 +38,7 @@ def main() -> None:
     for i in range(len(dataset)):
         image, question, answer = dataset[i]
 
-        prompt = f"[INST] <image>\n{question} Answer in short form. [/INST]"
+        prompt = f"[INST] <image> {question} Answer in short form. [/INST] <answer>"
         inputs = processor(prompt, image, return_tensors="pt").to(device)
 
         outputs = model.generate(
@@ -47,8 +47,11 @@ def main() -> None:
             pad_token_id=model.pad_token_id,
         )
         predicted = processor.decode(outputs[0], skip_special_tokens=True)
+        assert isinstance(predicted, str)
 
-        if check_answer(predicted, answer):
+        predicted_answer = extract_answer(predicted)
+
+        if check_answer(predicted_answer, answer):
             correct_count += 1
 
         progress_bar.desc = f"Accuracy: {correct_count / (i+1):.2%}"
@@ -57,18 +60,26 @@ def main() -> None:
     print(f"Accuracy: {correct_count / len(dataset):.2%}")
 
 
-def check_answer(predicted: str, answer: str):
-    predicted = re.sub(
-        r"\[INST\].*\[/INST\]",
-        "",
-        predicted,
-        flags=re.DOTALL,
-    )
-
-    if predicted.lower().find(answer.lower()) != -1:
+def check_answer(predicted_answer: str, answer: str) -> bool:
+    if predicted_answer.lower().find(answer.lower()) != -1:
         return True
 
     return False
+
+
+def extract_answer(predicted: str) -> str:
+    if predicted.lower().find("</answer>") == -1:
+        predicted += "</answer>"
+
+    match = re.search(
+        r"<answer>(.*)</answer>",
+        predicted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if match is None:
+        raise ValueError("answer not found in predicted text")
+
+    return match.group(1)
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ def main() -> None:
     for i in range(len(dataset)):
         image, question, answer = dataset[i]
 
-        q_prompt = f"[INST] <image>\n{question} Let's think step by step. [/INST]"
+        q_prompt = f"[INST] <image>\n{question} Think in steps and answer in short form. [/INST] Let's think step by step:\n<steps>\n1."
         q_inputs = processor(q_prompt, image, return_tensors="pt").to(device)
 
         qs_outputs = model.generate(
@@ -46,10 +46,13 @@ def main() -> None:
             max_new_tokens=2000,
             pad_token_id=model.pad_token_id,
         )
-        qs = processor.decode(qs_outputs[0], skip_special_tokens=True)
-        assert isinstance(qs, str)
+        qs_predicted = processor.decode(qs_outputs[0], skip_special_tokens=True)
+        assert isinstance(qs_predicted, str)
 
-        qs_prompt = f"{qs.replace('[INST]  ', '[INST] <image>').replace('[/INST]', '')} Answer in short form: <answer> [/INST]"
+        if qs_predicted.lower().find("</steps>") == -1:
+            qs_predicted += "</steps>\n"
+
+        qs_prompt = f"{qs_predicted}"
         qs_inputs = processor(qs_prompt, image, return_tensors="pt").to(device)
 
         qsa_outputs = model.generate(
@@ -69,14 +72,24 @@ def main() -> None:
     print(f"Accuracy: {correct_count / len(dataset):.2%}")
 
 
-def check_answer(qsa: str, answer: str) -> bool:
-    # Get content between <answer> and </answer>
-    match = re.search(r"<answer>(.*)</answer>", qsa, re.IGNORECASE)
+def check_answer(predicted: str, answer: str) -> bool:
+    if predicted.lower().find("</answer>") == -1:
+        predicted += "</answer>"
+
+    match = re.search(
+        r"<answer>(.*)</answer>",
+        predicted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
     if match is None:
         return False
 
     predicted_answer = match.group(1)
-    return re.search(answer, predicted_answer, re.IGNORECASE) is not None
+
+    if predicted_answer.lower().find(answer.lower()) != -1:
+        return True
+
+    return False
 
 
 if __name__ == "__main__":
