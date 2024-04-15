@@ -58,7 +58,17 @@ def main() -> None:
 
 
 def check_answer(predicted: str, answer: str):
-    return re.search(answer, predicted, re.IGNORECASE) is not None
+    predicted = re.sub(
+        r"\[INST\].*\[/INST\]",
+        "",
+        predicted,
+        flags=re.DOTALL,
+    )
+
+    if predicted.lower().find(answer.lower()) != -1:
+        return True
+
+    return False
 
 
 if __name__ == "__main__":
