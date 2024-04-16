@@ -38,7 +38,7 @@ def main() -> None:
     for i in range(len(dataset)):
         image, question, answer = dataset[i]
 
-        prompt = f"[INST] <image> {question} Answer in short form. [/INST] <answer>"
+        prompt = f"[INST] <image> {question} [/INST] To answer in one word: <answer>"
         inputs = processor(prompt, image, return_tensors="pt").to(device)
 
         outputs = model.generate(

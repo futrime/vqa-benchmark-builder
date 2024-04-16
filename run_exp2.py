@@ -38,7 +38,7 @@ def main() -> None:
     for i in range(len(dataset)):
         image, question, answer = dataset[i]
 
-        prompt_q = f"[INST] <image> {question} Think step by step and answer in short form. [/INST] Let's think step by step: <steps> First,"
+        prompt_q = f"[INST] <image> {question} [/INST] Let's think step by step: <steps> First,"
         inputs_q = processor(prompt_q, image, return_tensors="pt").to(device)
 
         outputs_q = model.generate(
@@ -51,7 +51,7 @@ def main() -> None:
 
         predicted_steps = extract_steps(predicted_q)
 
-        prompt_qs = f"[INST] <image> {question} Think step by step and answer in short form. [/INST] Let's think step by step: <steps>{predicted_steps}</steps> The short answer is: <answer>"
+        prompt_qs = f"[INST] <image> {question} [/INST] Let's think step by step: <steps>{predicted_steps}</steps> To answer in one word: <answer>"
         inputs_qs = processor(prompt_qs, image, return_tensors="pt").to(device)
 
         outputs_qs = model.generate(
