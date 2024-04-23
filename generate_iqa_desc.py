@@ -62,14 +62,14 @@ def main() -> None:
 
     ontology_df = pd.read_json(ONTOLOGY_FILE_PATH)
 
-    qa_df = pd.DataFrame(columns=["img_desc", "question", "steps", "answer"])
+    qa_df = pd.DataFrame(columns=["id", "img_desc", "question", "steps", "answer"])
 
     column_names = ontology_df.columns.tolist()
     class_column_names = [x for x in column_names if "class" in x]
     entity_column_names = [x for x in column_names if "entity" in x]
     relation_column_names = [x for x in column_names if "relation" in x]
 
-    for row in ontology_df.itertuples():
+    for index, row in ontology_df.iterrows():
         class_list_list: List[List[str]] = [getattr(row, x) for x in class_column_names]
         entity_list: List[str] = [getattr(row, x) for x in entity_column_names]
         relation_list: List[str] = [getattr(row, x) for x in relation_column_names]
@@ -78,7 +78,7 @@ def main() -> None:
             class_list_list, entity_list, relation_list
         )
 
-        qa_df.loc[-1] = [img_desc, question, steps, answer]
+        qa_df.loc[-1] = [index, img_desc, question, steps, answer]
         qa_df.index = qa_df.index + 1
         qa_df = qa_df.sort_index()
 
