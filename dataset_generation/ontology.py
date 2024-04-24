@@ -1,8 +1,8 @@
 import owlready2
 
-ontology = owlready2.get_ontology("")
+onto = owlready2.get_ontology("")
 
-with ontology:
+with onto:
     # Concept
     class Food(owlready2.Thing):
         pass

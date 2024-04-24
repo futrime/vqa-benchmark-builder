@@ -8,7 +8,7 @@ import numpy as np
 import owlready2
 import pandas as pd
 
-from ontologies import ontology
+from dataset_generation.ontology import onto
 
 MAX_DEPTH = 5
 ONTOLOGY_FILE_PATH = "data/custom/ontology.json"
@@ -122,7 +122,7 @@ def unique_concat(*args):
 
 
 def main() -> None:
-    object_pairs = get_object_pairs(ontology.individuals(), [ontology.Vegetable])
+    object_pairs = get_object_pairs(onto.individuals(), [onto.Vegetable])
     object_tuple_dict = dictify(object_pairs)
     dict_table_format = tablify(object_tuple_dict)
     string_table = stringify_table(dict_table_format)

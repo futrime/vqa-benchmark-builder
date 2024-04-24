@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 import pandas as pd
 
-from ontologies import Food
+from dataset_generation.ontology import Food
 
 ONTOLOGY_FILE_PATH = "data/custom/ontology.json"
 QA_FILE_PATH = "data/custom/iqa.json"
