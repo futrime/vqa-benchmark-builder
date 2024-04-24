@@ -162,5 +162,5 @@ cython_debug/
 
 
 ## Project specific
-.vscode/
-data/
+/.vscode/
+/data/
