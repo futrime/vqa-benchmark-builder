@@ -360,18 +360,18 @@ with ontology:
         is_growing=[above_ground],
     )
 
-    zucchini = Vegetable(
-        "zucchini",
-        has_shape=[long, cylindrical],
-        has_color=[green],
-        has_nutrition=[vitamin_A, vitamin_B, vitamin_C, carbohydrates],
-        has_edible_part=[fruits, leaves],
-        has_seed_inside=[seed],
-        is_category_of=[fruit_vegetables],
-        is_ingredient_of=[grilled_vegetables],
-        has_dietary_method=[cooked],
-        is_growing=[above_ground],
-    )
+    # zucchini = Vegetable(
+    #     "zucchini",
+    #     has_shape=[long, cylindrical],
+    #     has_color=[green],
+    #     has_nutrition=[vitamin_A, vitamin_B, vitamin_C, carbohydrates],
+    #     has_edible_part=[fruits, leaves],
+    #     has_seed_inside=[seed],
+    #     is_category_of=[fruit_vegetables],
+    #     is_ingredient_of=[grilled_vegetables],
+    #     has_dietary_method=[cooked],
+    #     is_growing=[above_ground],
+    # )
 
     # 西葫芦
 
@@ -423,66 +423,66 @@ with ontology:
     )
 
     # 绿叶蔬菜类
-    lettuce = Vegetable(
-        "lettuce",
-        has_shape=[round],
-        has_color=[green],
-        has_nutrition=[lutein, vitamin_C, potassium],
-        has_taste=[grassy],
-        original_from=[egypt, asia],
-        has_edible_part=[leaves],
-        is_category_of=[leaves_vegetables],
-        has_dietary_method=[raw],
-        is_growing=[on_ground],
-        is_ingredient_of=[salad],
-    )
-    cabbage = Vegetable(
-        "cabbage",
-        has_shape=[round],
-        has_color=[green],
-        has_nutrition=[vitamin_C, calcium, fiber, glucosinolates],
-        has_edible_part=[leaves],
-        is_category_of=[leaves_vegetables],
-        original_from=[europe],
-        has_dietary_method=[cooked],
-        is_growing=[on_ground],
-    )
-    broccoli = Vegetable(
-        "broccoli",
-        has_color=[green],
-        has_nutrition=[vitamin_A, vitamin_C, calcium, iron, protein],
-        has_edible_part=[flowers],
-        is_category_of=[flower_vegetables],
-        is_ingredient_of=[stir_fry],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[on_ground],
-    )
-    asparagus = Vegetable(
-        "asparagus",
-        has_shape=[conical, long],
-        has_color=[green],
-        has_nutrition=[vitamin_C, vitamin_K, protein],
-        has_edible_part=[stems],
-        is_category_of=[stem_vegetables],
-        original_from=[europe, asia],
-        has_dietary_method=[cooked],
-        is_growing=[on_ground],
-    )
+    # lettuce = Vegetable(
+    #     "lettuce",
+    #     has_shape=[round],
+    #     has_color=[green],
+    #     has_nutrition=[lutein, vitamin_C, potassium],
+    #     has_taste=[grassy],
+    #     original_from=[egypt, asia],
+    #     has_edible_part=[leaves],
+    #     is_category_of=[leaves_vegetables],
+    #     has_dietary_method=[raw],
+    #     is_growing=[on_ground],
+    #     is_ingredient_of=[salad],
+    # )
+    # cabbage = Vegetable(
+    #     "cabbage",
+    #     has_shape=[round],
+    #     has_color=[green],
+    #     has_nutrition=[vitamin_C, calcium, fiber, glucosinolates],
+    #     has_edible_part=[leaves],
+    #     is_category_of=[leaves_vegetables],
+    #     original_from=[europe],
+    #     has_dietary_method=[cooked],
+    #     is_growing=[on_ground],
+    # )
+    # broccoli = Vegetable(
+    #     "broccoli",
+    #     has_color=[green],
+    #     has_nutrition=[vitamin_A, vitamin_C, calcium, iron, protein],
+    #     has_edible_part=[flowers],
+    #     is_category_of=[flower_vegetables],
+    #     is_ingredient_of=[stir_fry],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[on_ground],
+    # )
+    # asparagus = Vegetable(
+    #     "asparagus",
+    #     has_shape=[conical, long],
+    #     has_color=[green],
+    #     has_nutrition=[vitamin_C, vitamin_K, protein],
+    #     has_edible_part=[stems],
+    #     is_category_of=[stem_vegetables],
+    #     original_from=[europe, asia],
+    #     has_dietary_method=[cooked],
+    #     is_growing=[on_ground],
+    # )
 
     # 辣椒类
-    capsicum = Vegetable(
-        "capsicum",
-        has_shape=[blocky],
-        has_color=[green, red, yellow],
-        has_nutrition=[capsaicinoids, vitamin_C, vitamin_B],
-        has_taste=[spicy, crisp, sweet],
-        has_edible_part=[fruits],
-        has_seed_inside=[seed],
-        is_category_of=[fruit_vegetables],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[above_ground],
-        is_ingredient_of=[spicy_meal],
-    )
+    # capsicum = Vegetable(
+    #     "capsicum",
+    #     has_shape=[blocky],
+    #     has_color=[green, red, yellow],
+    #     has_nutrition=[capsaicinoids, vitamin_C, vitamin_B],
+    #     has_taste=[spicy, crisp, sweet],
+    #     has_edible_part=[fruits],
+    #     has_seed_inside=[seed],
+    #     is_category_of=[fruit_vegetables],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[above_ground],
+    #     is_ingredient_of=[spicy_meal],
+    # )
     pepper = Vegetable(
         "pepper",
         has_shape=[pointy, long],
@@ -496,19 +496,19 @@ with ontology:
         is_growing=[above_ground],
         is_ingredient_of=[spicy_meal],
     )
-    chilli = Vegetable(
-        "chilli",
-        has_shape=[pointy, long],
-        has_color=[green, red, yellow],
-        has_nutrition=[capsaicinoids, vitamin_C, vitamin_B],
-        has_taste=[spicy],
-        has_edible_part=[fruits],
-        has_seed_inside=[seed],
-        is_category_of=[fruit_vegetables],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[above_ground],
-        is_ingredient_of=[spicy_meal],
-    )
+    # chilli = Vegetable(
+    #     "chilli",
+    #     has_shape=[pointy, long],
+    #     has_color=[green, red, yellow],
+    #     has_nutrition=[capsaicinoids, vitamin_C, vitamin_B],
+    #     has_taste=[spicy],
+    #     has_edible_part=[fruits],
+    #     has_seed_inside=[seed],
+    #     is_category_of=[fruit_vegetables],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[above_ground],
+    #     is_ingredient_of=[spicy_meal],
+    # )
 
     # 葱蒜类
     onion = Vegetable(
@@ -523,17 +523,17 @@ with ontology:
         is_growing=[under_ground],
         is_ingredient_of=[salad, grilled_vegetables, pungent_meal, stir_fry],
     )
-    springonion = Vegetable(
-        "springonion",
-        has_shape=[long],
-        has_color=[white, green],
-        has_nutrition=[vitamin_C, allium_sulphur_compounds, vitamin_B, iron],
-        has_taste=[pungent],
-        has_edible_part=[stalks],
-        is_category_of=[bulb_vegetables],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[on_ground],
-    )
+    # springonion = Vegetable(
+    #     "springonion",
+    #     has_shape=[long],
+    #     has_color=[white, green],
+    #     has_nutrition=[vitamin_C, allium_sulphur_compounds, vitamin_B, iron],
+    #     has_taste=[pungent],
+    #     has_edible_part=[stalks],
+    #     is_category_of=[bulb_vegetables],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[on_ground],
+    # )
     garlic = Vegetable(
         "garlic",
         has_shape=[round],
@@ -547,29 +547,29 @@ with ontology:
         has_dietary_method=[raw_and_cooked],
         is_growing=[under_ground],
     )
-    leek = Vegetable(
-        "leek",
-        has_shape=[long, cylindrical],
-        has_color=[green],
-        has_nutrition=[allium_sulphur_compounds, iron, vitamin_C, vitamin_B, manganese],
-        has_taste=[pungent],
-        has_edible_part=[stalks],
-        is_category_of=[bulb_vegetables],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[on_ground],
-        is_ingredient_of=[pungent_meal],
-    )
-    parsley = Vegetable(
-        "parsley",
-        has_color=[green],
-        has_nutrition=[vitamin_C, vitamin_A, iron, vitamin_B],
-        has_taste=[herbal, woody],
-        has_edible_part=[leaves, stalks],
-        is_category_of=[leaves_vegetables, herbs],
-        original_from=[mediterranean],
-        has_dietary_method=[raw_and_cooked],
-        is_growing=[on_ground],
-    )
+    # leek = Vegetable(
+    #     "leek",
+    #     has_shape=[long, cylindrical],
+    #     has_color=[green],
+    #     has_nutrition=[allium_sulphur_compounds, iron, vitamin_C, vitamin_B, manganese],
+    #     has_taste=[pungent],
+    #     has_edible_part=[stalks],
+    #     is_category_of=[bulb_vegetables],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[on_ground],
+    #     is_ingredient_of=[pungent_meal],
+    # )
+    # parsley = Vegetable(
+    #     "parsley",
+    #     has_color=[green],
+    #     has_nutrition=[vitamin_C, vitamin_A, iron, vitamin_B],
+    #     has_taste=[herbal, woody],
+    #     has_edible_part=[leaves, stalks],
+    #     is_category_of=[leaves_vegetables, herbs],
+    #     original_from=[mediterranean],
+    #     has_dietary_method=[raw_and_cooked],
+    #     is_growing=[on_ground],
+    # )
 
     # orange_pumpkin = Vegetable("orange_pumpkin", has_shape=[oblate],has_color=[orange], has_nutrition=[carotenoids, vitamin_A, fiber], has_taste=[sweet], original_from=[america], has_edible_part=[fruits], has_seed_inside=[seed], is_category_of=[fruit_vegetables], has_dietary_method=[raw_and_cooked], is_growing=[above_ground])
     # yellow_pumpkin = Vegetable("yellow_pumpkin", has_shape=[round],has_color=[yellow], has_nutrition=[carotenoids, vitamin_A, fiber], has_taste=[sweet], original_from=[america], has_edible_part=[fruits], has_seed_inside=[seed], is_category_of=[fruit_vegetables], has_dietary_method=[raw_and_cooked], is_growing=[above_ground])
@@ -738,93 +738,93 @@ with ontology:
 
     #     Fruit 水果实例 - 以下水果未确认blender里面有object
 
-    kiwifruit = Fruit(
-        "kiwifruit",
-        has_shape=[round],
-        has_color=[green],
-        original_from=[china],
-        is_ingredient_of=[fruit_salad],
-    )
-    strawberry = Fruit("strawberry", has_color=[red], has_taste=[sweet])
-    pineapple = Fruit(
-        "pineapple",
-        has_color=[yellow],
-        has_taste=[sweet],
-        is_ingredient_of=[fruit_juice, fruit_salad],
-    )
-    cherry = Fruit(
-        "cherry", has_color=[red], has_taste=[sweet, fruity], has_shape=[round]
-    )
-    green_apple = Fruit(
-        "green_apple", has_color=[green], has_taste=[sweet], original_from=[america]
-    )
-    red_apple = Fruit(
-        "red_apple", has_color=[red], has_taste=[sweet], original_from=[america]
-    )
-    golden_delicious = Fruit(
-        "golden_delicious",
-        has_color=[yellow],
-        has_taste=[sweet],
-        original_from=[america],
-    )
-    gala = Fruit("gala", has_color=[red], has_taste=[sweet], original_from=[america])
-    mandarin = Fruit("mandarin", has_color=[yellow], has_taste=[sweet, juicy])
-    apple = Fruit(
-        "apple", has_child_food=[green_apple, red_apple, golden_delicious, gala]
-    )
-    orange = Fruit("apple", has_child_food=[mandarin])
+    # kiwifruit = Fruit(
+    #     "kiwifruit",
+    #     has_shape=[round],
+    #     has_color=[green],
+    #     original_from=[china],
+    #     is_ingredient_of=[fruit_salad],
+    # )
+    # strawberry = Fruit("strawberry", has_color=[red], has_taste=[sweet])
+    # pineapple = Fruit(
+    #     "pineapple",
+    #     has_color=[yellow],
+    #     has_taste=[sweet],
+    #     is_ingredient_of=[fruit_juice, fruit_salad],
+    # )
+    # cherry = Fruit(
+    #     "cherry", has_color=[red], has_taste=[sweet, fruity], has_shape=[round]
+    # )
+    # green_apple = Fruit(
+    #     "green_apple", has_color=[green], has_taste=[sweet], original_from=[america]
+    # )
+    # red_apple = Fruit(
+    #     "red_apple", has_color=[red], has_taste=[sweet], original_from=[america]
+    # )
+    # golden_delicious = Fruit(
+    #     "golden_delicious",
+    #     has_color=[yellow],
+    #     has_taste=[sweet],
+    #     original_from=[america],
+    # )
+    # gala = Fruit("gala", has_color=[red], has_taste=[sweet], original_from=[america])
+    # mandarin = Fruit("mandarin", has_color=[yellow], has_taste=[sweet, juicy])
+    # apple = Fruit(
+    #     "apple", has_child_food=[green_apple, red_apple, golden_delicious, gala]
+    # )
+    # orange = Fruit("apple", has_child_food=[mandarin])
     # Add more fruits with simplified relations
-    mango = Fruit(
-        "mango",
-        has_color=[yellow, orange],
-        has_taste=[sweet, fruity],
-        is_ingredient_of=[fruit_salad, smoothie],
-        has_shape=[round],
-        has_nutrition=[vitamin_A, vitamin_C, fiber, sugar],
-    )
+    # mango = Fruit(
+    #     "mango",
+    #     has_color=[yellow, orange],
+    #     has_taste=[sweet, fruity],
+    #     is_ingredient_of=[fruit_salad, smoothie],
+    #     has_shape=[round],
+    #     has_nutrition=[vitamin_A, vitamin_C, fiber, sugar],
+    # )
 
-    pineapple = Fruit(
-        "pineapple",
-        has_color=[yellow],
-        has_taste=[sweet, sour, fruity],
-        is_ingredient_of=[fruit_salad, smoothie],
-        has_shape=[round],
-        has_nutrition=[vitamin_C, vitamin_B, fiber, sugar],
-    )
+    # pineapple = Fruit(
+    #     "pineapple",
+    #     has_color=[yellow],
+    #     has_taste=[sweet, sour, fruity],
+    #     is_ingredient_of=[fruit_salad, smoothie],
+    #     has_shape=[round],
+    #     has_nutrition=[vitamin_C, vitamin_B, fiber, sugar],
+    # )
 
-    strawberry = Fruit(
-        "strawberry",
-        has_color=[red],
-        has_taste=[sweet, fruity],
-        is_ingredient_of=[fruit_salad, smoothie],
-        has_shape=[conical],
-        has_nutrition=[vitamin_C, manganese, fiber, sugar],
-    )
+    # strawberry = Fruit(
+    #     "strawberry",
+    #     has_color=[red],
+    #     has_taste=[sweet, fruity],
+    #     is_ingredient_of=[fruit_salad, smoothie],
+    #     has_shape=[conical],
+    #     has_nutrition=[vitamin_C, manganese, fiber, sugar],
+    # )
 
-    kiwifruit = Fruit(
-        "kiwifruit",
-        has_color=[brown, green],
-        has_taste=[sour, sweet, fruity],
-        is_ingredient_of=[fruit_salad, smoothie],
-        has_shape=[round],
-        has_nutrition=[vitamin_C, vitamin_K, fiber, sugar],
-    )
+    # kiwifruit = Fruit(
+    #     "kiwifruit",
+    #     has_color=[brown, green],
+    #     has_taste=[sour, sweet, fruity],
+    #     is_ingredient_of=[fruit_salad, smoothie],
+    #     has_shape=[round],
+    #     has_nutrition=[vitamin_C, vitamin_K, fiber, sugar],
+    # )
 
-    raspberry = Fruit(
-        "raspberry",
-        has_color=[red],
-        has_taste=[sweet],
-        is_ingredient_of=[fruit_salad, smoothie],
-        has_shape=[round],
-        has_nutrition=[vitamin_C, manganese, fiber, sugar],
-    )
+    # raspberry = Fruit(
+    #     "raspberry",
+    #     has_color=[red],
+    #     has_taste=[sweet],
+    #     is_ingredient_of=[fruit_salad, smoothie],
+    #     has_shape=[round],
+    #     has_nutrition=[vitamin_C, manganese, fiber, sugar],
+    # )
 
-    egg = Poultry(
-        "egg",
-        has_color=[brown],
-        has_nutrition=[protein, calories, fat, sodium, choline, vitamin_B, phosphorus],
-        is_ingredient_of=[fried_egg, boil_egg, steam_egg],
-    )
+    # egg = Poultry(
+    #     "egg",
+    #     has_color=[brown],
+    #     has_nutrition=[protein, calories, fat, sodium, choline, vitamin_B, phosphorus],
+    #     is_ingredient_of=[fried_egg, boil_egg, steam_egg],
+    # )
 
     #       Dairy 奶制品实例 - blender中存在对应object
     yoghurt = Dairy(
@@ -848,34 +848,34 @@ with ontology:
     )
 
     #     Meat 肉类实例 - blender中暂无对应object
-    beef = Meat("beef", has_taste=[meaty], has_color=[red])
-    # chicken = Meat("chicken", has_taste=[meaty], has_color=[white])
-    lamb = Meat("lamb", has_taste=[meaty], has_color=[red])
-    pork = Meat("pork", has_taste=[meaty], has_color=[red])
+    # beef = Meat("beef", has_taste=[meaty], has_color=[red])
+    # # chicken = Meat("chicken", has_taste=[meaty], has_color=[white])
+    # lamb = Meat("lamb", has_taste=[meaty], has_color=[red])
+    # pork = Meat("pork", has_taste=[meaty], has_color=[red])
 
-    salmon = Fish("salmon", has_taste=[fishy], has_nutrition=[fat, protein])
-    shrimp = Fish("shrimp", has_taste=[fishy], has_nutrition=[protein])
-    squid = Fish("squid", has_taste=[fishy], has_nutrition=[protein])
+    # salmon = Fish("salmon", has_taste=[fishy], has_nutrition=[fat, protein])
+    # shrimp = Fish("shrimp", has_taste=[fishy], has_nutrition=[protein])
+    # squid = Fish("squid", has_taste=[fishy], has_nutrition=[protein])
 
-    rice = Grain("rice", has_shape=[round, long])
-    noodle = Grain("noodle", has_shape=[long])
-    pasta = Grain("pasta", has_shape=[round, long])
-    bread = Grain("bread", has_shape=[long])
-    corn = Grain("corn", has_color=[yellow], original_from=[america])
+    # rice = Grain("rice", has_shape=[round, long])
+    # noodle = Grain("noodle", has_shape=[long])
+    # pasta = Grain("pasta", has_shape=[round, long])
+    # bread = Grain("bread", has_shape=[long])
+    # corn = Grain("corn", has_color=[yellow], original_from=[america])
 
     pan = Kitchenware("pan", has_function=[fry], has_color=[red])
     pot = Kitchenware("pot", has_function=[boil], has_color=[red])
-    chopping_board = Kitchenware("chopping_board", has_function=[cutting])
+    # chopping_board = Kitchenware("chopping_board", has_function=[cutting])
 
-    spoon = Tableware("spoon", has_function=[drinking])
+    # spoon = Tableware("spoon", has_function=[drinking])
     # fork = Tableware('fork', has_function=[poking, stabbing])
     knife = Tableware("knife", has_function=[cutting])
-    plate = Tableware(
-        "plate",
-        has_function=[servefood],
-        has_shape=[circular],
-        has_sub_function=[chopping_board],
-    )
+    # plate = Tableware(
+    #     "plate",
+    #     has_function=[servefood],
+    #     has_shape=[circular],
+    #     has_sub_function=[chopping_board],
+    # )
 
     # Recipe
     vegetable_juice = Recipe(
@@ -886,30 +886,48 @@ with ontology:
         has_ingredient=[apple, orange, lemon, watermelon, grape, pear, lemon, lime],
     )
     cake = Recipe("cake", has_ingredient=[apple, banana, carrot, lemon, lime])
+    # salad = Recipe(
+    #     "salad",
+    #     has_ingredient=[lettuce, cucumber, tomato, carrot, onion, avocado, broccoli],
+    # )
     salad = Recipe(
         "salad",
-        has_ingredient=[lettuce, cucumber, tomato, carrot, onion, avocado, broccoli],
+        has_ingredient=[cucumber, tomato, carrot, onion, avocado],
     )
+    # stir_fry = Recipe(
+    #     "stir_fry",
+    #     has_ingredient=[
+    #         broccoli,
+    #         carrot,
+    #         onion,
+    #         mushroom,
+    #         eggplant,
+    #         zucchini,
+    #         asparagus,
+    #     ],
+    # )
     stir_fry = Recipe(
         "stir_fry",
         has_ingredient=[
-            broccoli,
             carrot,
             onion,
             mushroom,
             eggplant,
-            zucchini,
-            asparagus,
         ],
     )
-    pungent_meal = Recipe("pungent_meal", has_ingredient=[onion, garlic, leek])
-    spicy_meal = Recipe("spicy_meal", has_ingredient=[capsicum, chilli])
+    # pungent_meal = Recipe("pungent_meal", has_ingredient=[onion, garlic, leek])
+    pungent_meal = Recipe("pungent_meal", has_ingredient=[onion, garlic])
+    # spicy_meal = Recipe("spicy_meal", has_ingredient=[capsicum, chilli])
     fruit_salad = Recipe(
         "fruit_salad", has_ingredient=[apple, banana, orange, grape, watermelon]
     )
+    # grilled_vegetables = Recipe(
+    #     "grilled_vegetables",
+    #     has_ingredient=[eggplant, zucchini, capsicum, mushroom, asparagus],
+    # )
     grilled_vegetables = Recipe(
         "grilled_vegetables",
-        has_ingredient=[eggplant, zucchini, capsicum, mushroom, asparagus],
+        has_ingredient=[eggplant, mushroom],
     )
     fruit_smoothie = Recipe(
         "fruit_smoothie",
