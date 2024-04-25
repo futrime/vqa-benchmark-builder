@@ -1,4 +1,6 @@
-from ontology import Food, onto
+from ontology import onto
+
+IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
 
 
 def main():

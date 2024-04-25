@@ -13,7 +13,7 @@ OUTPUT_IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
 POSSIBLE_OBJECT_COLLECTION_NAME = "Collection"
 PLACEHOLDER_COLLECTION_NAME = "Empty Objects"
 
-IMAGE_COUNT = 100
+IMAGE_COUNT = 10000
 RANDOM_SEED = 42
 
 
@@ -23,13 +23,17 @@ class ObjectDescriptor(TypedDict):
 
 
 class ImageDescriptor(TypedDict):
+    id: int
     objects: List[ObjectDescriptor]
 
 
 def main():
     random.seed(RANDOM_SEED)
 
+    # Initialize output directory.
     os.makedirs(OUTPUT_IMAGE_DIR, exist_ok=True)
+    for file in os.listdir(OUTPUT_IMAGE_DIR):
+        os.remove(os.path.join(OUTPUT_IMAGE_DIR, file))
 
     # Make sure that IMAGE_COUNT images can be generated.
     placeholder_locations = get_placeholder_locations()
@@ -52,8 +56,8 @@ def main():
         image_descriptor = generate_image(index, image_descriptors)
         image_descriptors.append(image_descriptor)
 
-    with open(OUTPUT_IMAGE_DESCRIPTOR_FILE, "w") as f:
-        json.dump(image_descriptors, f)
+        with open(OUTPUT_IMAGE_DESCRIPTOR_FILE, "w") as f:
+            json.dump(image_descriptors, f, indent=4)
 
 
 def generate_image(
@@ -91,7 +95,11 @@ def generate_image(
             new_objects.append(new_object)
 
         # Create image descriptor.
-        image_descriptor: ImageDescriptor = {"objects": []}
+        image_descriptor: ImageDescriptor = {
+            "id": index,
+            "objects": [],
+        }
+
         for new_object in new_objects:
             location = [
                 float(new_object.location[0]),
