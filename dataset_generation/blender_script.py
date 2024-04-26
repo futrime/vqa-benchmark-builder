@@ -1,4 +1,5 @@
 import json
+import logging
 import math
 import os
 import random
@@ -117,7 +118,12 @@ def generate_image(
 
     # Render.
     bpy.context.scene.render.filepath = os.path.join(OUTPUT_IMAGE_DIR, f"{index}.png")
-    bpy.ops.render.render(write_still=True)
+    while True:
+        try:
+            bpy.ops.render.render(write_still=True)
+            break
+        except Exception as e:
+            logging.error(f"error during rendering: {e}")
 
     # Clean up.
     for obj in new_objects:
