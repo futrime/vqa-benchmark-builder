@@ -6,9 +6,12 @@ import torch.utils.data
 import tqdm
 import transformers
 
-from config import IMAGE_TEST_DIR, QUESTION_TEST_FILE_PATH
 from lora_dataset import LoRADataset
 from utils import get_first_available_gpu
+
+QUESTION_TEST_FILE_PATH = "data/LoRA/Questions/lora_vqa_test.json"
+
+IMAGE_TEST_DIR = "data/LoRA/test"
 
 
 def main() -> None:
