@@ -98,7 +98,7 @@ def process_entry(api_url: str, entry_queue: queue.Queue, result_queue: queue.Qu
         answer = entry["answer"]
 
         image_base64 = encode_image_to_base64(image)
-        question_prompt = f"{question}"
+        question_prompt = f"{question} Answer in one word."
 
         data = {
             "question": question_prompt,
@@ -122,6 +122,8 @@ def process_entry(api_url: str, entry_queue: queue.Queue, result_queue: queue.Qu
                 logging.error(f"Failed to get answer: {e}")
 
         is_answer_correct = check_answer(predicted_answer, answer)
+        if not is_answer_correct:
+            pass
         result_queue.put(is_answer_correct)
 
 
