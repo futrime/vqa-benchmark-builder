@@ -1,5 +1,5 @@
 import GPUtil
-import torch.cuda
+import torch
 
 
 def get_first_available_gpu() -> torch.device:
