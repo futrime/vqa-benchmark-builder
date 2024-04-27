@@ -5,6 +5,7 @@ from typing import List, TypedDict
 
 import owlready2
 import tqdm
+
 from ontology import Thing, onto
 
 IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
@@ -58,18 +59,21 @@ def main():
 def generate_qa_list(
     id_list: List[int], image_descriptor: ImageDescriptor
 ) -> List[QaEntry]:
-    rendered_object_names: List[str] = [x["name"] for x in image_descriptor["objects"]]
     rendered_instances: List[owlready2.Thing] = [
-        x for x in onto.individuals() if x.name in rendered_object_names
+        x
+        for x in onto.individuals()
+        if x.name in [x["name"] for x in image_descriptor["objects"]]
     ]
-    assert len(rendered_instances) == len(rendered_object_names)
+    rendered_object_names = [x.name for x in rendered_instances]
+    if len(rendered_object_names) == 0:
+        return []
 
     qa_list: List[QaEntry] = []
     for id in id_list:
         question_set = set([x["question"] for x in qa_list])
         is_generated = False
         while not is_generated:
-            qa_entry = try_generate_qa(id, rendered_instances)
+            qa_entry = try_generate_qa(id, image_descriptor["id"], rendered_instances)
             if qa_entry["question"] not in question_set:
                 is_generated = True
 
@@ -78,14 +82,19 @@ def generate_qa_list(
     return qa_list
 
 
-def try_generate_qa(id: int, rendered_instances: List[owlready2.Thing]) -> QaEntry:
+def try_generate_qa(
+    id: int, image_id: int, rendered_instances: List[owlready2.Thing]
+) -> QaEntry:
     # Generate answer first.
     answer_should_be_yes = random.random() < 0.5
 
     if answer_should_be_yes:
         selected_thing = random.choice(rendered_instances)
     else:
-        selected_thing = random.choice(list(Thing.instances()))
+        instances = list(Thing.instances())
+        selected_thing = random.choice(
+            [x for x in instances if x not in rendered_instances]
+        )
 
     question = f"Is there a {selected_thing.name} in the image?"
     steps = [
@@ -100,7 +109,7 @@ def try_generate_qa(id: int, rendered_instances: List[owlready2.Thing]) -> QaEnt
 
     qa_entry: QaEntry = {
         "id": id,
-        "image_id": id,
+        "image_id": image_id,
         "question": question,
         "steps": steps,
         "answer": "yes" if answer_should_be_yes else "no",

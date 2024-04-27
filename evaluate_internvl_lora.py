@@ -10,6 +10,7 @@ import dotenv
 import PIL.Image
 import requests
 import tqdm
+
 from lora_dataset import LoRADataset
 
 QUESTION_FILE = "data/LoRA/Questions/lora_vqa_test.json"
@@ -55,9 +56,9 @@ def main() -> None:
             else:
                 wrong_count += 1
 
-            progress_bar.update(1)
+            progress_bar.update()
             progress_bar.set_postfix(
-                accuracy=f"{correct_count / (correct_count + wrong_count):.2f}"
+                correctness=f"{correct_count}/{correct_count+wrong_count} ({correct_count / (correct_count+wrong_count):.2%})",
             )
 
     for thread in thread_list:
@@ -66,7 +67,7 @@ def main() -> None:
     progress_bar.close()
 
     accuracy = correct_count / (correct_count + wrong_count)
-    logging.info(f"Accuracy: {accuracy:.2f}")
+    logging.info(f"Accuracy: {accuracy:.2%}")
 
 
 def check_answer(predicted_answer: str, answer: str) -> bool:

@@ -11,7 +11,7 @@ class CustomDataset(torch.utils.data.Dataset):
         super().__init__()
 
         with open(qa_file_path, "r") as f:
-            self._qa_entries: List[QaEntry] = json.load(f)
+            self._qa_entries: List[_QaEntry] = json.load(f)
 
         self._image_dir = image_dir
 
@@ -39,7 +39,7 @@ class DatasetEntry(TypedDict):
     answer: str
 
 
-class QaEntry(TypedDict):
+class _QaEntry(TypedDict):
     id: int
     image_id: int
     question: str

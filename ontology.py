@@ -866,8 +866,8 @@ with onto:
     # bread = Grain("bread", has_shape=[long])
     # corn = Grain("corn", has_color=[yellow], original_from=[america])
 
-    pan = Kitchenware("pan", has_function=[fry], has_color=[red])
-    pot = Kitchenware("pot", has_function=[boil], has_color=[red])
+    # pan = Kitchenware("pan", has_function=[fry], has_color=[red])
+    # pot = Kitchenware("pot", has_function=[boil], has_color=[red])
     # chopping_board = Kitchenware("chopping_board", has_function=[cutting])
 
     # spoon = Tableware("spoon", has_function=[drinking])
@@ -943,28 +943,11 @@ with onto:
     )
 
     # Others
-    plant = Thing(
-        "plant",
-        has_function=[is_growing],
-        has_color=[green],
-        has_nutrition=[carbohydrates, fiber, sugar, water],
-    )
-
     candy = Food(
         "candy",
         has_color=[red, yellow, green, orange, purple],
         has_taste=[sweet],
         has_nutrition=[sugar, calories],
-    )
-
-    green_pear = Fruit(
-        "pear.003",
-        has_color=[green],
-        has_taste=[juicy, sweet, fruity],
-        has_shape=[pear_shaped],
-        is_ingredient_of=[fruit_juice, fruit_salad],
-        has_nutrition=[calories, carbs, fiber, vitamin_C, vitamin_K, potassium, copper],
-        has_seed_inside=[seed],
     )
 
     yogurt = Dairy(
@@ -979,12 +962,6 @@ with onto:
         has_color=[brown],
         has_taste=[sweet],
         has_nutrition=[sugar, fat, calories],
-    )
-
-    bottle = Kitchenware(
-        "bottle",
-        has_function=[drinking],
-        has_color=[white],
     )
 
     alcohol = Nutrition("alcohol")
