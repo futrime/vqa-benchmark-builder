@@ -10,6 +10,7 @@ from ontology import Thing, onto
 
 IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
 OUTPUT_QA_FILE = "data/custom/qa.json"
+OUTPUT_SFT_FILE = "data/custom/sft.json"
 
 DUMP_OUTPUT_QA_FILE_INTERVAL = 1000
 LOGGING_LEVEL = logging.INFO
@@ -35,6 +36,24 @@ class QaEntry(TypedDict):
     answer: str
 
 
+class SftEntry(TypedDict):
+    id: str
+    image: str
+    conversations: List["ConversationDescriptor"]
+
+
+class ConversationDescriptor(
+    TypedDict(
+        "ConversationDescriptor",
+        {
+            "from": str,
+            "value": str,
+        },
+    )
+):
+    pass
+
+
 def main():
     logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -42,6 +61,8 @@ def main():
 
     with open(IMAGE_DESCRIPTOR_FILE, "r") as f:
         image_descriptors: List[ImageDescriptor] = json.load(f)
+
+    logging.info("Generating QA entries...")
 
     qa_entries: List[QaEntry] = []
     for i, image_descriptor in tqdm.tqdm(
@@ -54,6 +75,41 @@ def main():
         if i % DUMP_OUTPUT_QA_FILE_INTERVAL == 0:
             with open(OUTPUT_QA_FILE, "w") as f:
                 json.dump(qa_entries, f, indent=4)
+
+    logging.info("Generating SFT entries...")
+
+    sft_entries: List[SftEntry] = []
+    for qa_entry in tqdm.tqdm(qa_entries):
+        id = str(qa_entry["id"])
+        image = f"{qa_entry['image_id']}.png"
+
+        gpt_output = ""
+        for step_num, step in enumerate(qa_entry["steps"]):
+            gpt_output += f"{step_num + 1}. {step}\n"
+
+        gpt_output += f"<answer>{qa_entry['answer']}</answer>"
+
+        conversations: List[ConversationDescriptor] = [
+            {
+                "from": "human",
+                "value": qa_entry["question"],
+            },
+            {
+                "from": "gpt",
+                "value": gpt_output,
+            },
+        ]
+
+        sft_entries.append(
+            {
+                "id": id,
+                "image": image,
+                "conversations": conversations,
+            }
+        )
+
+    with open(OUTPUT_SFT_FILE, "w") as f:
+        json.dump(sft_entries, f, indent=4)
 
 
 def generate_qa_list(

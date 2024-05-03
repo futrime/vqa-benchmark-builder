@@ -26,10 +26,10 @@ Render images:
 blender <path_to_blend_file> --background --python blender_script.py
 ```
 
-Generate questions and answers:
+Generate the other parts of the dataset:
 
 ```bash
-python generate_qa.py
+python generate_dataset.py
 ```
 
 ## Contributing
