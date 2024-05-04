@@ -1,0 +1,3 @@
+[submodule "third_party/LLaVA"]
+	path = third_party/LLaVA
+	url = https://github.com/haotian-liu/LLaVA.git

@@ -18,6 +18,14 @@ To install the required packages, run:
 pip install -r requirements.txt
 ```
 
+Install packages from submodule LLaVA:
+
+```bash
+pip install --upgrade pip
+pip install -e third_party/LLaVA[train]
+pip install flash-attn --no-build-isolation
+```
+
 ## Usage
 
 Render images:
@@ -30,6 +38,12 @@ Generate the other parts of the dataset:
 
 ```bash
 python generate_dataset.py
+```
+
+Finetune the generator:
+
+```bash
+source finetune_generator.sh
 ```
 
 ## Contributing
