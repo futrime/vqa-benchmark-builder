@@ -1,7 +1,7 @@
 import json
 import logging
 import random
-from typing import List, TypedDict
+from typing import Any, Generator, List, NoReturn, Optional, TypedDict
 
 import owlready2
 import tqdm
@@ -9,12 +9,17 @@ import tqdm
 from ontology import Thing, onto
 
 IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
-OUTPUT_QA_FILE = "data/custom/qa.json"
+OUTPUT_TRAIN_METADATA_FILE = "data/custom/train.json"
+OUTPUT_VAL_METADATA_FILE = "data/custom/val.json"
+OUTPUT_TEST_METADATA_FILE = "data/custom/test.json"
 OUTPUT_SFT_FILE = "data/custom/sft.json"
 
 DUMP_OUTPUT_QA_FILE_INTERVAL = 1000
 LOGGING_LEVEL = logging.INFO
 RANDOM_SEED = 42
+RATIO_TRAIN = 0.8
+RATIO_VAL = 0.1
+RATIO_TEST = 0.1
 QA_COUNT_PER_IMAGE = 5
 
 
@@ -54,6 +59,85 @@ class ConversationDescriptor(
     pass
 
 
+class QaEntryGenerator:
+    def __init__(self, possible_instances: List[owlready2.Thing]):
+        self._id_generator = self._make_id_generator()
+        self._possible_instances = possible_instances
+
+    def generate(self, image_descriptor: ImageDescriptor) -> QaEntry:
+        rendered_instances: List[owlready2.Thing] = [
+            x
+            for x in self._possible_instances
+            if x.name in [x["name"] for x in image_descriptor["objects"]]
+        ]
+
+        id = self._generate_id()
+        while True:
+            qa_entry = self._try_generate(
+                id, image_descriptor["id"], rendered_instances
+            )
+            if qa_entry is not None:
+                return qa_entry
+
+    def generate_multiple(
+        self, image_descriptors: List[ImageDescriptor], count: int
+    ) -> List[QaEntry]:
+        qa_entries = []
+        for image_descriptor in tqdm.tqdm(image_descriptors):
+            for _ in range(count):
+                qa_entry = self.generate(image_descriptor)
+                qa_entries.append(qa_entry)
+        return qa_entries
+
+    def _try_generate(
+        self, id: int, image_id: int, rendered_instances: List[owlready2.Thing]
+    ) -> Optional[QaEntry]:
+        try:
+            # Generate answer first.
+            answer_should_be_yes = random.random() < 0.5
+
+            if answer_should_be_yes:
+                selected_thing = random.choice(rendered_instances)
+            else:
+                instances = self._possible_instances
+                selected_thing = random.choice(
+                    [x for x in instances if x not in rendered_instances]
+                )
+
+            question = f"Is there a {selected_thing.name} in the image?"
+            steps = [
+                f"There are {len(rendered_instances)} objects in the image.",
+                f"The objects are: {', '.join([x.name for x in rendered_instances])}.",
+            ]
+
+            if answer_should_be_yes:
+                steps.append(f"The {selected_thing.name} is in the image.")
+            else:
+                steps.append(f"The {selected_thing.name} is not in the image.")
+
+            qa_entry: QaEntry = {
+                "id": id,
+                "image_id": image_id,
+                "question": question,
+                "steps": steps,
+                "answer": "yes" if answer_should_be_yes else "no",
+            }
+
+            return qa_entry
+
+        except:
+            return None
+
+    def _generate_id(self) -> int:
+        return next(self._id_generator)
+
+    def _make_id_generator(self) -> Generator[int, Any, NoReturn]:
+        id = 0
+        while True:
+            yield id
+            id += 1
+
+
 def main():
     logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -64,22 +148,42 @@ def main():
 
     logging.info("Generating QA entries...")
 
-    qa_entries: List[QaEntry] = []
-    for i, image_descriptor in tqdm.tqdm(
-        enumerate(image_descriptors), total=len(image_descriptors)
-    ):
-        id_list = [i * QA_COUNT_PER_IMAGE + j for j in range(QA_COUNT_PER_IMAGE)]
-        qa_entries_of_current_image = generate_qa_list(id_list, image_descriptor)
-        qa_entries.extend(qa_entries_of_current_image)
+    qa_entry_generator = QaEntryGenerator(list(Thing.instances()))
 
-        if i % DUMP_OUTPUT_QA_FILE_INTERVAL == 0:
-            with open(OUTPUT_QA_FILE, "w") as f:
-                json.dump(qa_entries, f, indent=4)
+    # Split the image descriptors into train, val, and test sets.
+    random.shuffle(image_descriptors)
+    train_count = int(len(image_descriptors) * RATIO_TRAIN)
+    val_count = int(len(image_descriptors) * RATIO_VAL)
+
+    train_image_descriptors = image_descriptors[:train_count]
+    val_image_descriptors = image_descriptors[train_count : train_count + val_count]
+    test_image_descriptors = image_descriptors[train_count + val_count :]
+
+    logging.info("Generating QA entries for train set...")
+    train_qa_entries = qa_entry_generator.generate_multiple(
+        train_image_descriptors, QA_COUNT_PER_IMAGE
+    )
+    logging.info("Generating QA entries for val set...")
+    val_qa_entries = qa_entry_generator.generate_multiple(
+        val_image_descriptors, QA_COUNT_PER_IMAGE
+    )
+    logging.info("Generating QA entries for test set...")
+    test_qa_entries = qa_entry_generator.generate_multiple(
+        test_image_descriptors, QA_COUNT_PER_IMAGE
+    )
+
+    logging.info("Dumping QA entries...")
+    with open(OUTPUT_TRAIN_METADATA_FILE, "w") as f:
+        json.dump(train_qa_entries, f, indent=4)
+    with open(OUTPUT_VAL_METADATA_FILE, "w") as f:
+        json.dump(val_qa_entries, f, indent=4)
+    with open(OUTPUT_TEST_METADATA_FILE, "w") as f:
+        json.dump(test_qa_entries, f, indent=4)
 
     logging.info("Generating SFT entries...")
 
     sft_entries: List[SftEntry] = []
-    for qa_entry in tqdm.tqdm(qa_entries):
+    for qa_entry in tqdm.tqdm(train_qa_entries):
         id = str(qa_entry["id"])
         image = f"{qa_entry['image_id']}.png"
 
@@ -110,68 +214,6 @@ def main():
 
     with open(OUTPUT_SFT_FILE, "w") as f:
         json.dump(sft_entries, f, indent=4)
-
-
-def generate_qa_list(
-    id_list: List[int], image_descriptor: ImageDescriptor
-) -> List[QaEntry]:
-    rendered_instances: List[owlready2.Thing] = [
-        x
-        for x in onto.individuals()
-        if x.name in [x["name"] for x in image_descriptor["objects"]]
-    ]
-    rendered_object_names = [x.name for x in rendered_instances]
-    if len(rendered_object_names) == 0:
-        return []
-
-    qa_list: List[QaEntry] = []
-    for id in id_list:
-        question_set = set([x["question"] for x in qa_list])
-        is_generated = False
-        while not is_generated:
-            qa_entry = try_generate_qa(id, image_descriptor["id"], rendered_instances)
-            if qa_entry["question"] not in question_set:
-                is_generated = True
-
-        qa_list.append(qa_entry)
-
-    return qa_list
-
-
-def try_generate_qa(
-    id: int, image_id: int, rendered_instances: List[owlready2.Thing]
-) -> QaEntry:
-    # Generate answer first.
-    answer_should_be_yes = random.random() < 0.5
-
-    if answer_should_be_yes:
-        selected_thing = random.choice(rendered_instances)
-    else:
-        instances = list(Thing.instances())
-        selected_thing = random.choice(
-            [x for x in instances if x not in rendered_instances]
-        )
-
-    question = f"Is there a {selected_thing.name} in the image?"
-    steps = [
-        f"There are {len(rendered_instances)} objects in the image.",
-        f"The objects are: {', '.join([x.name for x in rendered_instances])}.",
-    ]
-
-    if answer_should_be_yes:
-        steps.append(f"The {selected_thing.name} is in the image.")
-    else:
-        steps.append(f"The {selected_thing.name} is not in the image.")
-
-    qa_entry: QaEntry = {
-        "id": id,
-        "image_id": image_id,
-        "question": question,
-        "steps": steps,
-        "answer": "yes" if answer_should_be_yes else "no",
-    }
-
-    return qa_entry
 
 
 if __name__ == "__main__":
