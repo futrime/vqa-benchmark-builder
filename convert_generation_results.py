@@ -6,8 +6,16 @@ import tqdm
 
 from custom_dataset import CustomDataset
 
-TRAIN_METADATA_FILE = "data/dataset/train.json"
-OUTPUT_SFT_FILE = "data/dataset/sft_generator.json"
+GENERATION_RESULTS_FILE = "data/dataset/generation_results.json"
+VAL_METADATA_FILE = "./data/dataset/val.json"
+OUTPUT_SFT_FILE = "data/dataset/sft_verifier.json"
+
+
+class GeneratedResultEntry(TypedDict):
+    id: int
+    qa_id: int
+    predicted: str
+    correctness: bool
 
 
 class SftEntry(TypedDict):
@@ -31,28 +39,26 @@ class ConversationDescriptor(
 def main():
     os.makedirs(os.path.dirname(OUTPUT_SFT_FILE), exist_ok=True)
 
-    with open(TRAIN_METADATA_FILE, "r") as f:
-        train_qa_entries: List[CustomDataset.Entry] = json.load(f)
+    with open(GENERATION_RESULTS_FILE, "r") as f:
+        generated_results: List[GeneratedResultEntry] = json.load(f)
+
+    dataset = CustomDataset(metadata_file_path=VAL_METADATA_FILE)
 
     sft_entries: List[SftEntry] = []
-    for qa_entry in tqdm.tqdm(train_qa_entries):
-        id = str(qa_entry["id"])
-        image = f"{qa_entry['image_id']}.png"
+    for generated_result in tqdm.tqdm(generated_results):
+        qa = dataset[generated_result["qa_id"]]
 
-        gpt_output = ""
-        for step_num, step in enumerate(qa_entry["steps"]):
-            gpt_output += f"{step_num + 1}. {step}\n"
-
-        gpt_output += f"<answer>{qa_entry['answer']}</answer>"
+        id = str(generated_result["id"])
+        image = f"{qa['image_id']}.png"
 
         conversations: List[ConversationDescriptor] = [
             {
                 "from": "human",
-                "value": "<image>\n" + qa_entry["question"],
+                "value": f"<image>\n{qa['question']}\n<prediction>{generated_result['predicted']}</prediction>\nIs the prediction correct?",
             },
             {
                 "from": "gpt",
-                "value": gpt_output,
+                "value": "yes" if generated_result["correctness"] else "no",
             },
         ]
 

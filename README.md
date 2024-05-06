@@ -40,13 +40,21 @@ Finetune the generator:
 ```bash
 python convert_dataset.py
 source finetune_generator.sh
-python ./third_party/LLaVA/scripts/merge_lora_weights.py --model-path ./data/checkpoints/llava-v1.5-7b-task-lora/ --model-base liuhaotian/llava-v1.5-7b --save-model-path ./data/models/llava-v1.5-7b-task-lora
+python ./third_party/LLaVA/scripts/merge_lora_weights.py --model-path ./data/checkpoints/llava-v1.5-7b-task-lora-generator/ --model-base liuhaotian/llava-v1.5-7b --save-model-path ./data/models/llava-v1.5-7b-task-lora-generator
 ```
 
-Talk with the generator:
+Evaluate the generator and generate results:
 
 ```bash
-python -m llava.serve.cli --model-path ./data/models/llava-v1.5-7b-task-lora/ --image-file <path_to_image>
+python evaluate_generator.py
+```
+
+Finetune the verifier:
+    
+```bash
+python convert_generation_results.py
+source finetune_verifier.sh
+python ./third_party/LLaVA/scripts/merge_lora_weights.py --model-path ./data/checkpoints/llava-v1.5-7b-task-lora-verifier/ --model-base ./data/models/llava-v1.5-7b-task-lora-generator --save-model-path ./data/models/llava-v1.5-7b-task-lora-verifier
 ```
 
 ## Contributing

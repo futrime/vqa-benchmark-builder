@@ -3,9 +3,9 @@
 deepspeed ./third_party/LLaVA/llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./third_party/LLaVA/scripts/zero3.json \
-    --model_name_or_path liuhaotian/llava-v1.5-7b \
+    --model_name_or_path ./data/models/llava-v1.5-7b-task-lora-generator \
     --version v1 \
-    --data_path ./data/dataset/sft_generator.json \
+    --data_path ./data/dataset/sft_verifier.json \
     --image_folder ./data/dataset/images \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \
@@ -15,7 +15,7 @@ deepspeed ./third_party/LLaVA/llava/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir ./data/checkpoints/llava-v1.5-7b-task-lora-generator \
+    --output_dir ./data/checkpoints/llava-v1.5-7b-task-lora-verifier \
     --num_train_epochs 1 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 4 \

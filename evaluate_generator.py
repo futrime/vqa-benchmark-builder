@@ -1,7 +1,9 @@
 import json
+import os
 import re
 from typing import TypedDict
 
+import PIL.Image
 import torch
 import tqdm
 from llava.constants import IMAGE_TOKEN_INDEX
@@ -20,8 +22,8 @@ from custom_dataset import CustomDataset
 MODEL_PATH = "./data/models/llava-v1.5-7b-task-lora"
 
 IMAGE_DIR = "./data/dataset/images"
-TEST_METADATA_FILE = "./data/dataset/test.json"
-OUTPUT_GENERATED_RESULTS = "./data/dataset/generated_results.json"
+VAL_METADATA_FILE = "./data/dataset/val.json"
+OUTPUT_GENERATED_RESULTS = "./data/dataset/generation_results.json"
 
 GENERATION_NUM_PER_QA = 10
 
@@ -54,8 +56,7 @@ def main():
     assert isinstance(context_len, int)
 
     dataset = CustomDataset(
-        metadata_file_path=TEST_METADATA_FILE,
-        image_dir=IMAGE_DIR,
+        metadata_file_path=VAL_METADATA_FILE,
     )
 
     result_entries: list[GeneratedResultEntry] = []
@@ -65,11 +66,13 @@ def main():
         correct_count = 0
         wrong_count = 0
         progress_bar = tqdm.tqdm(total=len(dataset) * GENERATION_NUM_PER_QA)
-        for i in range(len(dataset)):
-            entry = dataset[i]
-            image = entry["image"]
+        for entry in dataset:
+            image_id = entry["image_id"]
             question = entry["question"]
             answer = entry["answer"]
+
+            image_path = os.path.join(IMAGE_DIR, f"{image_id}.png")
+            image = PIL.Image.open(image_path).convert("RGB")
 
             image_tensor = process_images(
                 [image],
