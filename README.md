@@ -31,13 +31,14 @@ pip install flash-attn --no-build-isolation
 Generate dataset:
 
 ```bash
-blender <path_to_blend_file> --background --python blender_script.py
+blender <path_to_blend_file> --background --python generate_dataset_images.py
 python generate_dataset.py
 ```
 
 Finetune the generator:
 
 ```bash
+python convert_dataset.py
 source finetune_generator.sh
 python ./third_party/LLaVA/scripts/merge_lora_weights.py --model-path ./data/checkpoints/llava-v1.5-7b-task-lora/ --model-base liuhaotian/llava-v1.5-7b --save-model-path ./data/models/llava-v1.5-7b-task-lora
 ```

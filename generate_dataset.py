@@ -12,15 +12,13 @@ IMAGE_DESCRIPTOR_FILE = "data/dataset/image_descriptors.json"
 OUTPUT_TRAIN_METADATA_FILE = "data/dataset/train.json"
 OUTPUT_VAL_METADATA_FILE = "data/dataset/val.json"
 OUTPUT_TEST_METADATA_FILE = "data/dataset/test.json"
-OUTPUT_SFT_FILE = "data/dataset/sft.json"
 
-DUMP_OUTPUT_QA_FILE_INTERVAL = 1000
 LOGGING_LEVEL = logging.INFO
 RANDOM_SEED = 42
 RATIO_TRAIN = 0.8
 RATIO_VAL = 0.1
 RATIO_TEST = 0.1
-QA_COUNT_PER_IMAGE = 5
+ENTRY_COUNT_PER_IMAGE = 5
 
 
 class ImageDescriptor(TypedDict):
@@ -161,15 +159,15 @@ def main():
 
     logging.info("Generating QA entries for train set...")
     train_qa_entries = qa_entry_generator.generate_multiple(
-        train_image_descriptors, QA_COUNT_PER_IMAGE
+        train_image_descriptors, ENTRY_COUNT_PER_IMAGE
     )
     logging.info("Generating QA entries for val set...")
     val_qa_entries = qa_entry_generator.generate_multiple(
-        val_image_descriptors, QA_COUNT_PER_IMAGE
+        val_image_descriptors, ENTRY_COUNT_PER_IMAGE
     )
     logging.info("Generating QA entries for test set...")
     test_qa_entries = qa_entry_generator.generate_multiple(
-        test_image_descriptors, QA_COUNT_PER_IMAGE
+        test_image_descriptors, ENTRY_COUNT_PER_IMAGE
     )
 
     logging.info("Dumping QA entries...")
@@ -179,41 +177,6 @@ def main():
         json.dump(val_qa_entries, f, indent=4)
     with open(OUTPUT_TEST_METADATA_FILE, "w") as f:
         json.dump(test_qa_entries, f, indent=4)
-
-    logging.info("Generating SFT entries...")
-
-    sft_entries: List[SftEntry] = []
-    for qa_entry in tqdm.tqdm(train_qa_entries):
-        id = str(qa_entry["id"])
-        image = f"{qa_entry['image_id']}.png"
-
-        gpt_output = ""
-        for step_num, step in enumerate(qa_entry["steps"]):
-            gpt_output += f"{step_num + 1}. {step}\n"
-
-        gpt_output += f"<answer>{qa_entry['answer']}</answer>"
-
-        conversations: List[ConversationDescriptor] = [
-            {
-                "from": "human",
-                "value": "<image>\n" + qa_entry["question"],
-            },
-            {
-                "from": "gpt",
-                "value": gpt_output,
-            },
-        ]
-
-        sft_entries.append(
-            {
-                "id": id,
-                "image": image,
-                "conversations": conversations,
-            }
-        )
-
-    with open(OUTPUT_SFT_FILE, "w") as f:
-        json.dump(sft_entries, f, indent=4)
 
 
 if __name__ == "__main__":
