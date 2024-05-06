@@ -8,6 +8,7 @@ import torch.utils.data
 
 class CustomDataset(torch.utils.data.Dataset):
     class Entry(TypedDict):
+        id: int
         image: PIL.Image.Image
         question: str
         steps: List[str]
@@ -50,6 +51,7 @@ class CustomDataset(torch.utils.data.Dataset):
         image = PIL.Image.open(image_path)
 
         return {
+            "id": qa_entry["id"],
             "image": image,
             "question": qa_entry["question"],
             "steps": qa_entry["steps"],

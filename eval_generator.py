@@ -1,10 +1,11 @@
+import json
 import re
+from typing import TypedDict
 
 import torch
 import tqdm
 from llava.constants import IMAGE_TOKEN_INDEX
 from llava.conversation import conv_llava_v1
-from llava.eval.run_llava import eval_model
 from llava.mm_utils import (
     get_model_name_from_path,
     process_images,
@@ -20,6 +21,25 @@ MODEL_PATH = "./data/models/llava-v1.5-7b-task-lora"
 
 IMAGE_DIR = "./data/dataset/images"
 TEST_METADATA_FILE = "./data/dataset/test.json"
+OUTPUT_GENERATED_RESULTS = "./data/dataset/generated_results.json"
+
+GENERATION_NUM_PER_QA = 10
+
+
+class GeneratedResultEntry(TypedDict):
+    id: int
+    qa_id: int
+    predicted: str
+    correctness: bool
+
+
+class IdGenerator:
+    def __init__(self):
+        self._id = 0
+
+    def generate(self) -> int:
+        self._id += 1
+        return self._id - 1
 
 
 def main():
@@ -38,9 +58,13 @@ def main():
         image_dir=IMAGE_DIR,
     )
 
+    result_entries: list[GeneratedResultEntry] = []
+    id_generator = IdGenerator()
+
     with torch.inference_mode():
         correct_count = 0
-        progress_bar = tqdm.tqdm(total=len(dataset))
+        wrong_count = 0
+        progress_bar = tqdm.tqdm(total=len(dataset) * GENERATION_NUM_PER_QA)
         for i in range(len(dataset)):
             entry = dataset[i]
             image = entry["image"]
@@ -72,25 +96,45 @@ def main():
             assert isinstance(input_ids, torch.Tensor)
             input_ids = input_ids.unsqueeze(0).to(model.device)
 
-            output_ids = model.generate(
-                input_ids,
-                images=image_tensor,
-                image_sizes=torch.Tensor([image.size]),
-                do_sample=False,
-                temperature=0,
-                max_new_tokens=1024,
-                use_cache=True,
-            )
+            for i in range(GENERATION_NUM_PER_QA):
+                output_ids = model.generate(
+                    input_ids,
+                    images=image_tensor,
+                    image_sizes=torch.Tensor([image.size]),
+                    do_sample=True,
+                    temperature=0.8,
+                    max_new_tokens=1024,
+                    use_cache=True,
+                )
 
-            outputs = tokenizer.decode(output_ids[0]).strip()
+                outputs = tokenizer.decode(output_ids[0]).strip()
 
-            predicted_answer = extract_answer(outputs)
+                predicted_answer = extract_answer(outputs)
 
-            if check_answer(predicted_answer, answer):
-                correct_count += 1
+                correct = check_answer(predicted_answer, answer)
+                if correct:
+                    correct_count += 1
+                else:
+                    wrong_count += 1
 
-            progress_bar.update()
-            progress_bar.set_postfix(acc=f"{correct_count / (i + 1):.2%}")
+                result_entry: GeneratedResultEntry = {
+                    "id": id_generator.generate(),
+                    "qa_id": entry["id"],
+                    "predicted": outputs,
+                    "correctness": correct,
+                }
+
+                result_entries.append(result_entry)
+
+                progress_bar.update()
+                progress_bar.set_postfix(
+                    acc=f"{correct_count / (correct_count+wrong_count):.2%}"
+                )
+
+            with open(OUTPUT_GENERATED_RESULTS, "w") as f:
+                json.dump(result_entries, f, indent=4)
+
+        progress_bar.close()
 
 
 def check_answer(predicted_answer: str, answer: str) -> bool:

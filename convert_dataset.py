@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List, TypedDict
 
 import tqdm
@@ -34,6 +35,8 @@ class ConversationDescriptor(
 
 
 def main():
+    os.makedirs(os.path.dirname(OUTPUT_SFT_FILE), exist_ok=True)
+
     with open(TRAIN_METADATA_FILE, "r") as f:
         train_qa_entries: List[QaEntry] = json.load(f)
 
