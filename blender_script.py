@@ -8,8 +8,8 @@ from typing import List, TypedDict
 import bpy
 import bpy.types
 
-OUTPUT_IMAGE_DIR = "data/custom/images/"
-OUTPUT_IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
+OUTPUT_IMAGE_DIR = "data/dataset/images/"
+OUTPUT_IMAGE_DESCRIPTOR_FILE = "data/dataset/image_descriptors.json"
 
 POSSIBLE_OBJECT_COLLECTION_NAME = "Collection"
 PLACEHOLDER_COLLECTION_NAME = "Empty Objects"

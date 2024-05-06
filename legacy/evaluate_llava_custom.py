@@ -15,7 +15,7 @@ def main():
     device = get_first_available_gpu()
 
     dataset = CustomDataset(
-        qa_file_path=QA_FILE,
+        metadata_file_path=QA_FILE,
         image_dir=IMAGE_DIR,
     )
 

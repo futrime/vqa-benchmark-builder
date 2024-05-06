@@ -26,7 +26,7 @@ def main() -> None:
     assert api_url is not None, "INTERNVL_API_URL is not set"
 
     dataset = CustomDataset(
-        qa_file_path=QA_FILE,
+        metadata_file_path=QA_FILE,
         image_dir=IMAGE_DIR,
     )
 

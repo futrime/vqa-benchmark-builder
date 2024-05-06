@@ -6,13 +6,13 @@ from typing import Any, Generator, List, NoReturn, Optional, TypedDict
 import owlready2
 import tqdm
 
-from ontology import Thing, onto
+from ontology import Thing
 
-IMAGE_DESCRIPTOR_FILE = "data/custom/image_descriptors.json"
-OUTPUT_TRAIN_METADATA_FILE = "data/custom/train.json"
-OUTPUT_VAL_METADATA_FILE = "data/custom/val.json"
-OUTPUT_TEST_METADATA_FILE = "data/custom/test.json"
-OUTPUT_SFT_FILE = "data/custom/sft.json"
+IMAGE_DESCRIPTOR_FILE = "data/dataset/image_descriptors.json"
+OUTPUT_TRAIN_METADATA_FILE = "data/dataset/train.json"
+OUTPUT_VAL_METADATA_FILE = "data/dataset/val.json"
+OUTPUT_TEST_METADATA_FILE = "data/dataset/test.json"
+OUTPUT_SFT_FILE = "data/dataset/sft.json"
 
 DUMP_OUTPUT_QA_FILE_INTERVAL = 1000
 LOGGING_LEVEL = logging.INFO
@@ -196,7 +196,7 @@ def main():
         conversations: List[ConversationDescriptor] = [
             {
                 "from": "human",
-                "value": qa_entry["question"],
+                "value": "<image>\n" + qa_entry["question"],
             },
             {
                 "from": "gpt",
