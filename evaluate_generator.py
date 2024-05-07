@@ -19,7 +19,7 @@ from transformers import CLIPImageProcessor, LlamaTokenizer
 
 from custom_dataset import CustomDataset
 
-MODEL_PATH = "./data/models/llava-v1.5-7b-task-lora"
+MODEL_PATH = "./data/models/llava-v1.5-7b-task-lora-generator"
 
 IMAGE_DIR = "./data/dataset/images"
 VAL_METADATA_FILE = "./data/dataset/val.json"

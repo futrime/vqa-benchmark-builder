@@ -3,7 +3,7 @@
 deepspeed ./third_party/LLaVA/llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./third_party/LLaVA/scripts/zero3.json \
-    --model_name_or_path ./data/models/llava-v1.5-7b-task-lora-generator \
+    --model_name_or_path liuhaotian/llava-v1.5-7b \
     --version v1 \
     --data_path ./data/dataset/sft_verifier.json \
     --image_folder ./data/dataset/images \
