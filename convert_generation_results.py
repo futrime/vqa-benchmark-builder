@@ -51,10 +51,14 @@ def main():
         id = str(generated_result["id"])
         image = f"{qa['image_id']}.png"
 
+        prediction = generated_result["predicted"]
+        prediction = prediction.removeprefix("<s>")
+        prediction = prediction.removesuffix("</s>")
+
         conversations: List[ConversationDescriptor] = [
             {
                 "from": "human",
-                "value": f"<image>\n{qa['question']}\n<prediction>{generated_result['predicted']}</prediction>\nIs the prediction correct?",
+                "value": f"<image>\n{qa['question']}\n{prediction}",
             },
             {
                 "from": "gpt",
